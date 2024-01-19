@@ -126,19 +126,17 @@
                 case 12: value = 81 + day - 1; break;
                 default: value = 0;
             }
-                if (Array.isArray(value)) {
-        var adjustedValues = value.map(adjustToCycle);
-        var clickableValues = adjustedValues.map(function(v) {
-            return '<span class="clickable" onclick="setNumberAndCalculate(' + v + ')">' + v + '</span>';
-        });
-        // ここでスラッシュを挟むのではなく、それぞれの値を別々のスパンタグで囲みます。
-        return clickableValues.join(' , '); // 修正: 分数表記を回避
+    if (Array.isArray(value)) {
+        return value.map(function(v) {
+            var cycleValue = adjustToCycle(v);
+            return '<span class="clickable" onclick="setNumberAndCalculate(' + cycleValue + ')">' + cycleValue + '</span>';
+        }).join(' / ');  // 修正: 不要な ')">' を削除しました。
     } else {
         var cycleValue = adjustToCycle(value);
         return '<span class="clickable" onclick="setNumberAndCalculate(' + cycleValue + ')">' + cycleValue + '</span>';
     }
         }
-
+        　
         function adjustToCycle(value) {
             while (value < 1) value += 360;
             while (value > 360) value -= 360;
