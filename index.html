@@ -110,33 +110,31 @@
         }
 
         function calculateMonthSpecificValue(month, day) {
-    var firstValue, secondValue;
+    var value;
     switch (month) {
-        case 1: firstValue = 11 + day - 1; secondValue = 11 + 90 + day - 1; break;
-        case 2: firstValue = 21 + day - 1; secondValue = 21 + 180 + day - 1; break;
-        case 3: firstValue = 31 + day - 1; secondValue = 11 + 270 + day - 1; break;
-        case 4: firstValue = 41 + day - 1; secondValue = null; break; // For months with only one value.
-        case 5: firstValue = 51 + day - 1; secondValue = 51 + 90 + day - 1; break;
-        case 6: firstValue = 61 + day - 1; secondValue = 61 + 180 + day - 1; break;
-        case 7: firstValue = 71 + day - 1; secondValue = 71 + 270 + day - 1; break;
-        case 8: firstValue = 81 + day - 1; secondValue = null; break; // Similar to case 4.
-        case 9: firstValue = 91 + day - 1; secondValue = 91 + 90 + day - 1; break;
-        case 10: firstValue = 101 + day - 1; secondValue = 101 + 180 + day - 1; break;
-        case 11: firstValue = 111 + day - 1; secondValue = 111 + 90 + day - 1; break;
-        case 12: firstValue = 121 + day - 1; secondValue = null; break; // Similar to case 4.
-        default: firstValue = secondValue = null;
+        case 1: value = [11 + day - 1, 11 + 90 + day - 1]; break;
+        case 2: value = [21 + day - 1, 21 + 180 + day - 1]; break;
+        case 3: value = [31 + day - 1, 31 + 270 + day - 1]; break;
+        case 4: value = [41 + day - 1]; break;
+        case 5: value = [51 + day - 1, 51 + 90 + day - 1]; break;
+        case 6: value = [61 + day - 1, 61 + 180 + day - 1]; break;
+        case 7: value = [71 + day - 1, 71 + 270 + day - 1]; break;
+        case 8: value = [81 + day - 1]; break;
+        case 9: value = [91 + day - 1, 91 + 90 + day - 1]; break;
+        case 10: value = [101 + day - 1, 101 + 180 + day - 1]; break;
+        case 11: value = [111 + day - 1, 111 + 90 + day - 1]; break;
+        case 12: value = [121 + day - 1]; break;
+        default: value = [0];
     }
-        // 値を循環コード数に調整
-    values = values.map(adjustToCycle);
-
-    // クリック可能なHTMLを生成
-    var clickableValues = values.map(function(value) {
-        return '<span class="clickable" onclick="setNumberAndCalculate(' + value + ')">' + value + '</span>';
+    
+    value = value.map(adjustToCycle);
+    
+    var clickableValues = value.map(function(v) {
+        return '<span class="clickable" onclick="setNumberAndCalculate(' + v + ')">' + v + '</span>';
     });
-
-    // クリック可能なHTMLを"/"で結合
-    return clickableValues.join(' / ');
-        }
+    
+    return clickableValues.length > 1 ? clickableValues.join(' / ') : clickableValues[0];
+}
 
         function adjustToCycle(value) {
             while (value < 1) value += 360;
