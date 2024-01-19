@@ -121,9 +121,13 @@
                 case 12: value = 81 + day - 1; break;
                 default: value = 0;
             }
-            return value.map(function(v) {
-                return adjustToCycle(v);
-            }).join(' , ');
+                if (Array.isArray(value)) {
+        return value.map(function(v) {
+            return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustToCycle(v) + ')">' + adjustToCycle(v) + '</span>';
+        }).join(' / ');
+    } else {
+        return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustToCycle(value) + ')">' + adjustToCycle(value) + '</span>';
+    }
         }
 
         function adjustToCycle(value) {
