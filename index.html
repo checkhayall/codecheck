@@ -26,29 +26,52 @@
             var y_negative_angle = j - 90 < 0 ? j - 90 + 360 : j - 90;
             var y_negative_secret = 540 - y_negative_angle > 360 ? 540 - y_negative_angle - 360 : 540 - y_negative_angle;
 
-            // 結果の表示
-            document.getElementById('result1').innerHTML = '<span class="bold">循環コード数: </span>' + formatLink(j);
-            document.getElementById('result2').innerHTML = '<span class="bold">統合コード: </span>' + formatLink(y_integrated);
-            document.getElementById('result3').innerHTML = '<span class="bold">対向コード: </span>' + formatLink(y_opposite);
-            document.getElementById('result4').innerHTML = '<span class="bold">機密コード: </span>' + formatLink(y_secret);
-            document.getElementById('result5').innerHTML = '<span class="bold">正直角コード: </span>' + formatLink(y_honest_angle);
-            document.getElementById('result6').innerHTML = '<span class="bold">正直機密コード: </span>' + formatLink(y_honest_secret);
-            document.getElementById('result7').innerHTML = '<span class="bold">負直角コード: </span>' + formatLink(y_negative_angle);
-            document.getElementById('result8').innerHTML = '<span class="bold">負直機密コード: </span>' + formatLink(y_negative_secret);
-            document.getElementById('resultSyncCode').innerHTML = '<span class="bold">同期作動コード: </span>' + (syncCodes[j] ? syncCodes[j].map(formatLink).join(', ') : 'なし');
-        }
+            var resultElements = [
+        var resultElements = [
+        { elementId: 'result1', resultValue: j },
+        { elementId: 'result2', resultValue: y_integrated },
+        { elementId: 'result3', resultValue: y_opposite },
+        { elementId: 'result4', resultValue: y_secret },
+        { elementId: 'result5', resultValue: y_honest_angle },
+        { elementId: 'result6', resultValue: y_honest_secret },
+        { elementId: 'result7', resultValue: y_negative_angle },
+        { elementId: 'result8', resultValue: y_negative_secret }
+    ];
 
-function assignSyncCode() {
-    var jValue = document.getElementById('inputSyncJ').value;
-    var syncCodeValue = document.getElementById('inputSyncCode').value;
-    if (!syncCodes[jValue]) {
-        syncCodes[jValue] = [];
-    }
-    syncCodes[jValue].push(syncCodeValue);
-    localStorage.setItem('syncCodes', JSON.stringify(syncCodes));
-    document.getElementById('assignedSyncCode').textContent = '同期作動コード ' + jValue + ' に ' + syncCodeValue + ' を割り当てました。';
+    // 各結果を表示する
+    resultElements.forEach(function(item) {
+        var element = document.getElementById(item.elementId);
+        element.innerHTML = '<span class="bold">' + item.elementId.replace('result', 'コード ') + ': </span>' + formatLink(item.resultValue);
+        element.style = "font-size: smaller; white-space: nowrap;"; // フォントサイズと改行の調整
+    });
+
+    // 同期作動コードの表示を更新
+    var syncCodeElement = document.getElementById('resultSyncCode');
+    var syncCodesForJ = syncCodes[j] || [];
+    syncCodeElement.innerHTML = '<span class="bold">同期作動コード: </span>' + 
+        (syncCodesForJ.length > 0 ? syncCodesForJ.map(formatLink).join(', ') : 'なし');
+    syncCodeElement.style = "font-size: smaller; white-space: nowrap;"; // フォントサイズと改行の調整
 }
 
+function formatLink(value) {
+    // URLが割り当てられている場合はリンクとして表示
+    return urls[value] ? '<a href="' + urls[value] + '" target="_blank" class="link-symbol">' + value + '</a>' : value;
+}
+
+function assignSyncCode() {
+        var jValue = document.getElementById('inputSyncJ').value;
+        var syncCodeValue = document.getElementById('inputSyncCode').value;
+        syncCodes[jValue] = syncCodeValue; // 一対一の割り当て
+        syncCodes[syncCodeValue] = jValue; // 逆の割り当ても追加
+        localStorage.setItem('syncCodes', JSON.stringify(syncCodes));
+        document.getElementById('assignedSyncCode').textContent = '同期作動コード ' + jValue + ' に ' + syncCodeValue + ' を割り当てました。';
+        document.getElementById('assignedSyncCode').textContent += ' そして ' + syncCodeValue + ' に ' + jValue + ' を割り当てました。';
+    }
+
+function showCurrentProgram() {
+        document.getElementById('currentProgram').textContent = JSON.stringify({ syncCodes: syncCodes, urls: urls }, null, 2);
+    }
+        
 function assignUrl() {
     var jValue = document.getElementById('inputUrlJ').value;
     var urlValue = document.getElementById('inputUrl').value;
@@ -56,7 +79,6 @@ function assignUrl() {
     localStorage.setItem('urls', JSON.stringify(urls));
     document.getElementById('assignedUrl').textContent = '循環コード数 ' + jValue + ' にURL ' + urlValue + ' を割り当てました。';
 }
-
         
         function formatLink(value) {
             return urls[value] ? value + '<span class="link-symbol" onclick="openLink(\'' + urls[value] + '\')">&#9632;</span>' : value;
