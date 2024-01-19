@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
+<head>    
     <meta charset="UTF-8">
     <title>循環コード変換アプリ</title>
     <style>
+        body { background-color: #599ff1; } /* 背景色の変更 */
         .bold { font-weight: bold; }
         .link-symbol { color: blue; cursor: pointer; }
+        .clickable { color: red; cursor: pointer; } /* クリック可能な要素のスタイル */
         #currentProgram { height: 150px; overflow: auto; background-color: #f8f8f8; border: 1px solid #ddd; padding: 10px; }
         .results { font-size: smaller; white-space: nowrap; }
     </style>
@@ -65,8 +67,19 @@
 
             var dailyCode = calculateDailyCode(year, month, day, baseNumber, monthBaseNumber);
             document.getElementById('dailyCodeTitle').textContent = year + '年' + month + '月' + day + '日の日運コード';
-            document.getElementById('numeralCode').innerHTML = '<span class="bold">数秘日運: </span>' + dailyCode.join('<br>');
+            document.getElementById('numeralCode').innerHTML = '<span class="bold">数秘日運: </span>' + dailyCode.map(function(code) {
+            return '<span class="clickable" onclick="setNumberAndCalculate(' + code + ')">' + code + '</span>';
+        }).join('<br>');
         }
+
+    // ページロード時に現在の日付で日運コードを更新
+    updateDailyCodeTitle();
+
+    // 数値を設定して計算する関数
+    function setNumberAndCalculate(number) {
+        document.getElementById('inputNumber').value = number;
+        calculateCodes();
+    }
 
         function calculateBaseNumber(year) {
             var baseNumber = (year - 2000) + 60;
