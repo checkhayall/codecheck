@@ -123,20 +123,19 @@
         case 9: firstValue = 91 + day - 1; secondValue = 91 + 90 + day - 1; break;
         case 10: firstValue = 101 + day - 1; secondValue = 101 + 180 + day - 1; break;
         case 11: firstValue = 111 + day - 1; secondValue = 111 + 90 + day - 1; break;
-        case 12: firstValue = 81 + day - 1; secondValue = null; break; // Similar to case 4.
+        case 12: firstValue = 121 + day - 1; secondValue = null; break; // Similar to case 4.
         default: firstValue = secondValue = null;
     }
-    firstValue = adjustToCycle(firstValue);
-    var firstValueClickable = '<span class="clickable" onclick="setNumberAndCalculate(' + firstValue + ')">' + firstValue + '</span>';
+        // 値を循環コード数に調整
+    values = values.map(adjustToCycle);
 
-    // Only add second value if it is not null.
-    if (secondValue !== null) {
-        secondValue = adjustToCycle(secondValue);
-        var secondValueClickable = '<span class="clickable" onclick="setNumberAndCalculate(' + secondValue + ')">' + secondValue + '</span>';
-        return firstValueClickable + ' / ' + secondValueClickable;
-    } else {
-        return firstValueClickable;
-    }
+    // クリック可能なHTMLを生成
+    var clickableValues = values.map(function(value) {
+        return '<span class="clickable" onclick="setNumberAndCalculate(' + value + ')">' + value + '</span>';
+    });
+
+    // クリック可能なHTMLを"/"で結合
+    return clickableValues.join(' / ');
         }
 
         function adjustToCycle(value) {
