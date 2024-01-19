@@ -126,12 +126,12 @@
                 case 12: value = 121 + day - 1; break;
                 default: value = 0;
             }
-    if (Array.isArray(value)) {
-        var adjustedValues = value.map(adjustToCycle);
-        var firstValue = '<span class="clickable" onclick="setNumberAndCalculate(' + adjustedValues[0] + ')">' + adjustedValues[0] + '</span>';
-        var secondValue = '<span class="clickable" onclick="setNumberAndCalculate(' + adjustedValues[1] + ')">' + adjustedValues[1] + '</span>';
-        return firstValue + ' / ' + secondValue; // 修正
-    } 
+    var clickableValues = values.map(function(v) {
+        var cycleValue = adjustToCycle(v);
+        return '<span class="clickable" onclick="setNumberAndCalculate(' + cycleValue + ')">' + cycleValue + '</span>';
+    });
+    return clickableValues.join(', ');
+} 
         }
         　
         function adjustToCycle(value) {
