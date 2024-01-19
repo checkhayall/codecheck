@@ -5,7 +5,7 @@
     <title>日運コード計算機</title>
     <style>
         body { 
-            background-color: #4d2966; /* 背景色の変更 */
+            background-color: #08174d; /* 背景色の変更 */
             font-family: Arial, sans-serif; /* 標準的で綺麗なフォントに変更 */
             color: white; /* 文字の基本色を白に */
         }
@@ -129,11 +129,12 @@
                 if (Array.isArray(value)) {
         var adjustedValues = value.map(adjustToCycle);
         var clickableValues = adjustedValues.map(function(v) {
-            return '<span class="clickable" onclick="setNumberAndCalculate(' + v + ')">' + v + '</span>';
+            return `<span class="clickable" onclick="setNumberAndCalculate(${v})">${v}</span>`;
         });
-        return clickableValues.join(' / '); // a / b 形式で表示
+        // "/" を使って、2つの clickable span を区切る
+        return `${clickableValues[0]} / ${clickableValues[1]}`;
     } else {
-        return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustToCycle(value) + ')">' + adjustToCycle(value) + '</span>';
+        return `<span class="clickable" onclick="setNumberAndCalculate(${adjustToCycle(value)})">${adjustToCycle(value)}</span>`;
     }
         }
 
