@@ -10,15 +10,15 @@
             color: white; /* 文字の基本色を白に */
         }
         .bold { font-weight: bold; }
-        .link-symbol { color: green; cursor: pointer; }
-        .clickable { color: red; cursor: pointer; } /* クリック可能な要素のスタイル */
+        .link-symbol { color: blue; cursor: pointer; }
+        .clickable { color: green; cursor: pointer; } /* クリック可能な要素のスタイル */
         #currentProgram { height: 150px; overflow: auto; background-color: #f8f8f8; border: 1px solid #ddd; padding: 10px; }
         .results { font-size: smaller; white-space: nowrap; }
     </style>
 </head>
 <body>
     <h1>日運コード計算機</h1>
-    <img src="https://i.imgur.com/jPWNFTV_d.webp?maxwidth=760&fidelity=grand" alt="アカシックコード" style="width:80%; height:auto;">
+    <img src="https://i.imgur.com/jPWNFTV_d.webp?maxwidth=760&fidelity=grand" alt="アカシックコード" style="width:90%; height:auto;">
     <h2 id="dailyCodeTitle">N年X月Y日の日運コード</h2>
     <input type="date" id="inputDate" onchange="updateDailyCodeTitle()">
     <p id="numeralCode" class="results"></p>
@@ -127,13 +127,15 @@
                 default: value = 0;
             }
                 if (Array.isArray(value)) {
-        return value.map(function(v) {
-            var cycleValue = adjustToCycle(v);
-            return `<span class="clickable" onclick="setNumberAndCalculate(${cycleValue})">${cycleValue}</span>`;
-        }).join(' / ');
+        var adjustedValues = value.map(adjustToCycle);
+        var clickableValues = adjustedValues.map(function(v) {
+            return '<span class="clickable" onclick="setNumberAndCalculate(' + v + ')">' + v + '</span>';
+        });
+        // ここでスラッシュを挟むのではなく、それぞれの値を別々のスパンタグで囲みます。
+        return clickableValues.join(' , '); // 修正: 分数表記を回避
     } else {
         var cycleValue = adjustToCycle(value);
-        return `<span class="clickable" onclick="setNumberAndCalculate(${cycleValue})">${cycleValue}</span>`;
+        return '<span class="clickable" onclick="setNumberAndCalculate(' + cycleValue + ')">' + cycleValue + '</span>';
     }
         }
 
