@@ -7,7 +7,43 @@
         .bold { font-weight: bold; }
         .link-symbol { color: blue; cursor: pointer; }
         #currentProgram { height: 150px; overflow: auto; background-color: #f8f8f8; border: 1px solid #ddd; padding: 10px; }
+        .results { font-size: smaller; white-space: nowrap; }
     </style>
+</head>
+<body>
+    <h1>循環コード変換アプリ</h1>
+    <input type="number" id="inputNumber" placeholder="数値を入力">
+    <button onclick="calculateCodes()">計算する</button>
+    <p id="result1" class="results"></p>
+    <p id="result2" class="results"></p>
+    <p id="result3" class="results"></p>
+    <p id="result4" class="results"></p>
+    <p id="result5" class="results"></p>
+    <p id="result6" class="results"></p>
+    <p id="result7" class="results"></p>
+    <p id="result8" class="results"></p>
+    <p id="resultSyncCode" class="results"></p>
+
+    <h2>保存した定義を読み込む</h2>
+    <textarea id="savedData" rows="5" placeholder="ここに定義を入力"></textarea>
+    <button onclick="loadSavedData()">読み込む</button>
+
+    <h2>同期作動コードの割り当て</h2>
+    <input type="number" id="inputSyncJ" placeholder="循環コード数">
+    <input type="number" id="inputSyncCode" placeholder="割り当てるコード">
+    <button onclick="assignSyncCode()">割り当てる</button>
+    <p id="assignedSyncCode"></p>
+
+    <h2>URLの割り当て</h2>
+    <input type="number" id="inputUrlJ" placeholder="循環コード数">
+    <input type="text" id="inputUrl" placeholder="URL">
+    <button onclick="assignUrl()">割り当てる</button>
+    <p id="assignedUrl"></p>
+
+    <button onclick="showCurrentProgram()">現在定義されているプログラムを表示</button>
+    <pre id="currentProgram"></pre>
+    <button onclick="copyToClipboard()">定義をコピーする</button>
+
     <script>
         var syncCodes = JSON.parse(localStorage.getItem('syncCodes')) || {};
         var urls = JSON.parse(localStorage.getItem('urls')) || {};
@@ -17,7 +53,6 @@
             n = parseInt(n);
             var j = n % 360;
 
-            // 循環コード変換の計算
             var y_integrated = 360 - j;
             var y_opposite = (j + 180) % 360;
             var y_secret = 540 - j > 360 ? 540 - j - 360 : 540 - j;
@@ -27,65 +62,46 @@
             var y_negative_secret = 540 - y_negative_angle > 360 ? 540 - y_negative_angle - 360 : 540 - y_negative_angle;
 
             var resultElements = [
-        var resultElements = [
-        { elementId: 'result1', resultValue: j },
-        { elementId: 'result2', resultValue: y_integrated },
-        { elementId: 'result3', resultValue: y_opposite },
-        { elementId: 'result4', resultValue: y_secret },
-        { elementId: 'result5', resultValue: y_honest_angle },
-        { elementId: 'result6', resultValue: y_honest_secret },
-        { elementId: 'result7', resultValue: y_negative_angle },
-        { elementId: 'result8', resultValue: y_negative_secret }
-    ];
+                { elementId: 'result1', resultValue: j },
+                { elementId: 'result2', resultValue: y_integrated },
+                { elementId: 'result3', resultValue: y_opposite },
+                { elementId: 'result4', resultValue: y_secret },
+                { elementId: 'result5', resultValue: y_honest_angle },
+                { elementId: 'result6', resultValue: y_honest_secret },
+                { elementId: 'result7', resultValue: y_negative_angle },
+                { elementId: 'result8', resultValue: y_negative_secret }
+            ];
 
-    // 各結果を表示する
-    resultElements.forEach(function(item) {
-        var element = document.getElementById(item.elementId);
-        element.innerHTML = '<span class="bold">' + item.elementId.replace('result', 'コード ') + ': </span>' + formatLink(item.resultValue);
-        element.style = "font-size: smaller; white-space: nowrap;"; // フォントサイズと改行の調整
-    });
+            resultElements.forEach(function(item) {
+                var element = document.getElementById(item.elementId);
+                element.innerHTML = '<span class="bold">' + item.elementId.replace('result', 'コード ') + ': </span>' + formatLink(item.resultValue);
+            });
 
-    // 同期作動コードの表示を更新
-    var syncCodeElement = document.getElementById('resultSyncCode');
-    var syncCodesForJ = syncCodes[j] || [];
-    syncCodeElement.innerHTML = '<span class="bold">同期作動コード: </span>' + 
-        (syncCodesForJ.length > 0 ? syncCodesForJ.map(formatLink).join(', ') : 'なし');
-    syncCodeElement.style = "font-size: smaller; white-space: nowrap;"; // フォントサイズと改行の調整
-}
-
-function formatLink(value) {
-    // URLが割り当てられている場合はリンクとして表示
-    return urls[value] ? '<a href="' + urls[value] + '" target="_blank" class="link-symbol">' + value + '</a>' : value;
-}
-
-function assignSyncCode() {
-        var jValue = document.getElementById('inputSyncJ').value;
-        var syncCodeValue = document.getElementById('inputSyncCode').value;
-        syncCodes[jValue] = syncCodeValue; // 一対一の割り当て
-        syncCodes[syncCodeValue] = jValue; // 逆の割り当ても追加
-        localStorage.setItem('syncCodes', JSON.stringify(syncCodes));
-        document.getElementById('assignedSyncCode').textContent = '同期作動コード ' + jValue + ' に ' + syncCodeValue + ' を割り当てました。';
-        document.getElementById('assignedSyncCode').textContent += ' そして ' + syncCodeValue + ' に ' + jValue + ' を割り当てました。';
-    }
-
-function showCurrentProgram() {
-        document.getElementById('currentProgram').textContent = JSON.stringify({ syncCodes: syncCodes, urls: urls }, null, 2);
-    }
-        
-function assignUrl() {
-    var jValue = document.getElementById('inputUrlJ').value;
-    var urlValue = document.getElementById('inputUrl').value;
-    urls[jValue] = urlValue;
-    localStorage.setItem('urls', JSON.stringify(urls));
-    document.getElementById('assignedUrl').textContent = '循環コード数 ' + jValue + ' にURL ' + urlValue + ' を割り当てました。';
-}
-        
-        function formatLink(value) {
-            return urls[value] ? value + '<span class="link-symbol" onclick="openLink(\'' + urls[value] + '\')">&#9632;</span>' : value;
+            var syncCodeElement = document.getElementById('resultSyncCode');
+            var syncCodesForJ = syncCodes[j] || [];
+            syncCodeElement.innerHTML = '<span class="bold">同期作動コード: </span>' + 
+                (syncCodesForJ.length > 0 ? syncCodesForJ.map(formatLink).join(', ') : 'なし');
         }
 
-        function openLink(url) {
-            window.open(url, '_blank');
+        function assignSyncCode() {
+            var jValue = document.getElementById('inputSyncJ').value;
+            var syncCodeValue = document.getElementById('inputSyncCode').value;
+            syncCodes[jValue] = syncCodeValue;
+            syncCodes[syncCodeValue] = jValue;
+            localStorage.setItem('syncCodes', JSON.stringify(syncCodes));
+            document.getElementById('assignedSyncCode').textContent = '同期作動コード ' + jValue + ' に ' + syncCodeValue + ' を割り当てました。';
+        }
+
+        function assignUrl() {
+            var jValue = document.getElementById('inputUrlJ').value;
+            var urlValue = document.getElementById('inputUrl').value;
+            urls[jValue] = urlValue;
+            localStorage.setItem('urls', JSON.stringify(urls));
+            document.getElementById('assignedUrl').textContent = '循環コード数 ' + jValue + ' にURL ' + urlValue + ' を割り当てました。';
+        }
+
+        function formatLink(value) {
+            return urls[value] ? '<a href="' + urls[value] + '" target="_blank" class="link-symbol">' + value + '</a>' : value;
         }
 
         function loadSavedData() {
@@ -109,39 +125,5 @@ function assignUrl() {
                 .catch(err => alert('コピーに失敗しました: ', err));
         }
     </script>
-</head>
-<body>
-    <h1>循環コード変換アプリ</h1>
-    <input type="number" id="inputNumber" placeholder="数値を入力">
-    <button onclick="calculateCodes()">計算する</button>
-    <p id="result1"></p>
-    <p id="result2"></p>
-    <p id="result3"></p>
-    <p id="result4"></p>
-    <p id="result5"></p>
-    <p id="result6"></p>
-    <p id="result7"></p>
-    <p id="result8"></p>
-    <p id="resultSyncCode"></p>
-
-    <h2>保存した定義を読み込む</h2>
-    <textarea id="savedData" rows="5" placeholder="ここに定義を入力"></textarea>
-    <button onclick="loadSavedData()">読み込む</button>
-
-    <h2>同期作動コードの割り当て</h2>
-    <input type="number" id="inputSyncJ" placeholder="循環コード数">
-    <input type="number" id="inputSyncCode" placeholder="割り当てるコード">
-    <button onclick="assignSyncCode()">割り当てる</button>
-    <p id="assignedSyncCode"></p>
-
-    <h2>URLの割り当て</h2>
-    <input type="number" id="inputUrlJ" placeholder="循環コード数">
-    <input type="text" id="inputUrl" placeholder="URL">
-    <button onclick="assignUrl()">割り当てる</button>
-    <p id="assignedUrl"></p>
-
-    <button onclick="showCurrentProgram()">現在定義されているプログラムを表示</button>
-    <pre id="currentProgram"></pre>
-    <button onclick="copyToClipboard()">定義をコピーする</button>
 </body>
 </html>
