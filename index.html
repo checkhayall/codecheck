@@ -61,31 +61,40 @@
             var y_negative_angle = j - 90 < 0 ? j - 90 + 360 : j - 90;
             var y_negative_secret = 540 - y_negative_angle > 360 ? 540 - y_negative_angle - 360 : 540 - y_negative_angle;
 
-            document.getElementById('result1').innerHTML = '<span class="bold">中心コード: </span>' + j;
-            document.getElementById('result2').innerHTML = '<span class="bold">統合コード: </span>' + y_integrated;
-            document.getElementById('result3').innerHTML = '<span class="bold">対抗コード: </span>' + y_opposite;
-            document.getElementById('result4').innerHTML = '<span class="bold">機密コード: </span>' + y_secret;
-            document.getElementById('result5').innerHTML = '<span class="bold">正直コード: </span>' + y_honest_angle;
-            document.getElementById('result6').innerHTML = '<span class="bold">正機コード: </span>' + y_honest_secret;
-            document.getElementById('result7').innerHTML = '<span class="bold">負直コード: </span>' + y_negative_angle;
-            document.getElementById('result8').innerHTML = '<span class="bold">負機コード: </span>' + y_negative_secret;
+            document.getElementById('result1').innerHTML = '<span class="bold">中心コード: </span>' + formatLink(j);
+            document.getElementById('result2').innerHTML = '<span class="bold">統合コード: </span>' + formatLink(y_integrated);
+            document.getElementById('result3').innerHTML = '<span class="bold">対抗コード: </span>' + formatLink(y_opposite);
+            document.getElementById('result4').innerHTML = '<span class="bold">機密コード: </span>' + formatLink(y_secret);
+            document.getElementById('result5').innerHTML = '<span class="bold">正直コード: </span>' + formatLink(y_honest_angle);
+            document.getElementById('result6').innerHTML = '<span class="bold">正機コード: </span>' + formatLink(y_honest_secret);
+            document.getElementById('result7').innerHTML = '<span class="bold">負直コード: </span>' + formatLink(y_negative_angle);
+            document.getElementById('result8').innerHTML = '<span class="bold">負機コード: </span>' + formatLink(y_negative_secret);
 
-            var syncCodesForJ = syncCodes[j] ? [syncCodes[j]] : [];
-            var syncCodeDisplay = syncCodesForJ.length > 0
-                ? syncCodesForJ.sort((a, b) => parseInt(a) - parseInt(b)).map(function(code) {
-                    return '<span class="bold">同期作動コード: </span>' + code;
-                  }).join(', ')
-                : 'なし';
-            document.getElementById('resultSyncCode').innerHTML = syncCodeDisplay;
+            var syncCodesForJ = syncCodes[j] || [];
+            syncCodesForJ.sort((a, b) => parseInt(a) - parseInt(b));
+            document.getElementById('resultSyncCode').innerHTML = '<span class="bold">同期作動コード: </span>' + syncCodesForJ.map(formatLink).join(', ');
         }
 
         function assignSyncCode() {
             var jValue = document.getElementById('inputSyncJ').value;
             var syncCodeValue = document.getElementById('inputSyncCode').value;
-            syncCodes[jValue] = syncCodeValue;
-            syncCodes[syncCodeValue] = jValue;
+
+            if (!syncCodes[jValue]) {
+                syncCodes[jValue] = [];
+            }
+            if (!syncCodes[syncCodeValue]) {
+                syncCodes[syncCodeValue] = [];
+            }
+
+            if (!syncCodes[jValue].includes(syncCodeValue)) {
+                syncCodes[jValue].push(syncCodeValue);
+            }
+            if (!syncCodes[syncCodeValue].includes(jValue)) {
+                syncCodes[syncCodeValue].push(jValue);
+            }
+
             localStorage.setItem('syncCodes', JSON.stringify(syncCodes));
-            document.getElementById('assignedSyncCode').textContent = '同期作動コード ' + jValue + ' に ' + syncCodeValue + ' を割り当て、' + syncCodeValue + ' に ' + jValue + ' を割り当てました。';
+            document.getElementById('assignedSyncCode').textContent = '同期作動コード ' + jValue + ' に ' + syncCodeValue + ' を追加しました。';
         }
 
         function assignUrl() {
@@ -94,6 +103,10 @@
             urls[jValue] = urlValue;
             localStorage.setItem('urls', JSON.stringify(urls));
             document.getElementById('assignedUrl').textContent = '循環コード数 ' + jValue + ' にURL ' + urlValue + ' を割り当てました。';
+        }
+
+        function formatLink(value) {
+            return urls[value] ? '<a href="' + urls[value] + '" target="_blank" class="link-symbol">' + value + '</a>' : value;
         }
 
         function loadSavedData() {
