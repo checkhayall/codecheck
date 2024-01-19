@@ -110,30 +110,32 @@
         }
 
         function calculateMonthSpecificValue(month, day) {
-            var value;
-            switch (month) {
-                case 1: value = [11 + day - 1, 11 + 90 + day - 1]; break;
-                case 2: value = [21 + day - 1, 21 + 180 + day - 1]; break;
-                case 3: value = [31 + day - 1, 11 + 270 + day - 1]; break;
-                case 4: value = 41 + day - 1; break;
-                case 5: value = [51 + day - 1, 51 + 90 + day - 1]; break;
-                case 6: value = [61 + day - 1, 61 + 180 + day - 1]; break;
-                case 7: value = [71 + day - 1, 71 + 270 + day - 1]; break;
-                case 8: value = 81 + day - 1; break;
-                case 9: value = [91 + day - 1, 91 + 90 + day - 1]; break;
-                case 10: value = [101 + day - 1, 101 + 180 + day - 1]; break;
-                case 11: value = [111 + day - 1, 111 + 90 + day - 1]; break;
-                case 12: value = 81 + day - 1; break;
-                default: value = 0;
-            }
-                if (Array.isArray(value)) {
-        var adjustedValues = value.map(adjustToCycle);
-        var clickableValues = adjustedValues.map(function(v) {
-            return '<span class="clickable" onclick="setNumberAndCalculate(' + v + ')">' + v + '</span>';
-        });
-        return clickableValues[0] + ' / ' + clickableValues[1]; // 修正された部分
+    var firstValue, secondValue;
+    switch (month) {
+        case 1: firstValue = 11 + day - 1; secondValue = 11 + 90 + day - 1; break;
+        case 2: firstValue = 21 + day - 1; secondValue = 21 + 180 + day - 1; break;
+        case 3: firstValue = 31 + day - 1; secondValue = 11 + 270 + day - 1; break;
+        case 4: firstValue = 41 + day - 1; secondValue = null; break; // For months with only one value.
+        case 5: firstValue = 51 + day - 1; secondValue = 51 + 90 + day - 1; break;
+        case 6: firstValue = 61 + day - 1; secondValue = 61 + 180 + day - 1; break;
+        case 7: firstValue = 71 + day - 1; secondValue = 71 + 270 + day - 1; break;
+        case 8: firstValue = 81 + day - 1; secondValue = null; break; // Similar to case 4.
+        case 9: firstValue = 91 + day - 1; secondValue = 91 + 90 + day - 1; break;
+        case 10: firstValue = 101 + day - 1; secondValue = 101 + 180 + day - 1; break;
+        case 11: firstValue = 111 + day - 1; secondValue = 111 + 90 + day - 1; break;
+        case 12: firstValue = 81 + day - 1; secondValue = null; break; // Similar to case 4.
+        default: firstValue = secondValue = null;
+    }
+    firstValue = adjustToCycle(firstValue);
+    var firstValueClickable = '<span class="clickable" onclick="setNumberAndCalculate(' + firstValue + ')">' + firstValue + '</span>';
+
+    // Only add second value if it is not null.
+    if (secondValue !== null) {
+        secondValue = adjustToCycle(secondValue);
+        var secondValueClickable = '<span class="clickable" onclick="setNumberAndCalculate(' + secondValue + ')">' + secondValue + '</span>';
+        return firstValueClickable + ' / ' + secondValueClickable;
     } else {
-        return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustToCycle(value) + ')">' + adjustToCycle(value) + '</span>';
+        return firstValueClickable;
     }
         }
 
