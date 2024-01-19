@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>    
+<head>
     <meta charset="UTF-8">
     <title>循環コード変換アプリ</title>
     <style>
-        body { background-color: #599ff1; } /* 背景色の変更 */
+        body { 
+            background-color: #599ff1; /* 背景色の変更 */
+            font-family: 'はんなり明朝', serif; /* フォントの変更 */
+        }
         .bold { font-weight: bold; }
         .link-symbol { color: blue; cursor: pointer; }
         .clickable { color: red; cursor: pointer; } /* クリック可能な要素のスタイル */
@@ -122,12 +125,12 @@
                 default: value = 0;
             }
                 if (Array.isArray(value)) {
-        return value.map(function(v) {
-            return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustToCycle(v) + ')">' + adjustToCycle(v) + '</span>';
-        }).join(' / ');
-    } else {
-        return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustToCycle(value) + ')">' + adjustToCycle(value) + '</span>';
-    }
+                return value.map(function(v) {
+                    return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustToCycle(v) + ')">' + adjustToCycle(v) + '</span>';
+                }).join(', ');
+            } else {
+                return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustToCycle(value) + ')">' + adjustToCycle(value) + '</span>';
+            }
         }
 
         function adjustToCycle(value) {
