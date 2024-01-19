@@ -127,10 +127,10 @@
                 default: value = 0;
             }
     if (Array.isArray(value)) {
-        return value.map(function(v) {
-            var cycleValue = adjustToCycle(v);
-            return '<span class="clickable" onclick="setNumberAndCalculate(' + cycleValue + ')">' + cycleValue + '</span>';
-        }).join(' / ');  // 修正: 不要な ')">' を削除しました。
+        var adjustedValues = value.map(adjustToCycle);
+        var firstValue = '<span class="clickable" onclick="setNumberAndCalculate(' + adjustedValues[0] + ')">' + adjustedValues[0] + '</span>';
+        var secondValue = '<span class="clickable" onclick="setNumberAndCalculate(' + adjustedValues[1] + ')">' + adjustedValues[1] + '</span>';
+        return firstValue + ' / ' + secondValue; // 修正
     } else {
         var cycleValue = adjustToCycle(value);
         return '<span class="clickable" onclick="setNumberAndCalculate(' + cycleValue + ')">' + cycleValue + '</span>';
