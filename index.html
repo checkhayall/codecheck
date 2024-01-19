@@ -38,6 +38,26 @@
             document.getElementById('resultSyncCode').innerHTML = '<span class="bold">同期作動コード: </span>' + (syncCodes[j] ? syncCodes[j].map(formatLink).join(', ') : 'なし');
         }
 
+function assignSyncCode() {
+    var jValue = document.getElementById('inputSyncJ').value;
+    var syncCodeValue = document.getElementById('inputSyncCode').value;
+    if (!syncCodes[jValue]) {
+        syncCodes[jValue] = [];
+    }
+    syncCodes[jValue].push(syncCodeValue);
+    localStorage.setItem('syncCodes', JSON.stringify(syncCodes));
+    document.getElementById('assignedSyncCode').textContent = '同期作動コード ' + jValue + ' に ' + syncCodeValue + ' を割り当てました。';
+}
+
+function assignUrl() {
+    var jValue = document.getElementById('inputUrlJ').value;
+    var urlValue = document.getElementById('inputUrl').value;
+    urls[jValue] = urlValue;
+    localStorage.setItem('urls', JSON.stringify(urls));
+    document.getElementById('assignedUrl').textContent = '循環コード数 ' + jValue + ' にURL ' + urlValue + ' を割り当てました。';
+}
+
+        
         function formatLink(value) {
             return urls[value] ? value + '<span class="link-symbol" onclick="openLink(\'' + urls[value] + '\')">&#9632;</span>' : value;
         }
