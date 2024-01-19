@@ -6,7 +6,7 @@
     <style>
         body { 
             background-color: #599ff1; /* 背景色の変更 */
-            font-family: 'はんなり明朝', serif; /* フォントの変更 */
+            font-family: Arial, sans-serif; /* 標準的で綺麗なフォントに変更 */
         }
         .bold { font-weight: bold; }
         .link-symbol { color: blue; cursor: pointer; }
@@ -127,7 +127,7 @@
                 if (Array.isArray(value)) {
                 return value.map(function(v) {
                     return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustToCycle(v) + ')">' + adjustToCycle(v) + '</span>';
-                }).join(', ');
+                }).join(' / ');
             } else {
                 return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustToCycle(value) + ')">' + adjustToCycle(value) + '</span>';
             }
