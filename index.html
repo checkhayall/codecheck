@@ -127,14 +127,13 @@
                 default: value = 0;
             }
                 if (Array.isArray(value)) {
-        var adjustedValues = value.map(adjustToCycle);
-        var clickableValues = adjustedValues.map(function(v) {
-            return `<span class="clickable" onclick="setNumberAndCalculate(${v})">${v}</span>`;
-        });
-        // "/" を使って、2つの clickable span を区切る
-        return `${clickableValues[0]} / ${clickableValues[1]}`;
+        return value.map(function(v) {
+            var cycleValue = adjustToCycle(v);
+            return `<span class="clickable" onclick="setNumberAndCalculate(${cycleValue})">${cycleValue}</span>`;
+        }).join(' / ');
     } else {
-        return `<span class="clickable" onclick="setNumberAndCalculate(${adjustToCycle(value)})">${adjustToCycle(value)}</span>`;
+        var cycleValue = adjustToCycle(value);
+        return `<span class="clickable" onclick="setNumberAndCalculate(${cycleValue})">${cycleValue}</span>`;
     }
         }
 
