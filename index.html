@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>日運コード計算機</title>
+    <img src="ここに画像のURLを挿入" alt="アカシックコード" style="width:100%; height:auto;">
     <style>
         body { 
             background-color: #599ff1; /* 背景色の変更 */
@@ -125,12 +126,14 @@
                 default: value = 0;
             }
                 if (Array.isArray(value)) {
-                return value.map(function(v) {
-                    return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustToCycle(v) + ')">' + adjustToCycle(v) + '</span>';
-                }).join(' / ');
-            } else {
-                return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustToCycle(value) + ')">' + adjustToCycle(value) + '</span>';
-            }
+        var adjustedValues = value.map(adjustToCycle);
+        var clickableValues = adjustedValues.map(function(v) {
+            return '<span class="clickable" onclick="setNumberAndCalculate(' + v + ')">' + v + '</span>';
+        });
+        return clickableValues[0] + ' / ' + clickableValues[1]; // 修正された部分
+    } else {
+        return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustToCycle(value) + ')">' + adjustToCycle(value) + '</span>';
+    }
         }
 
         function adjustToCycle(value) {
