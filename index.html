@@ -131,7 +131,7 @@
         var adjustedValue = adjustToCycle(v);
         return '<span class="clickable" onclick="setNumberAndCalculate(' + adjustedValue + ')">' + adjustedValue + '</span>';
     }).join(' / ');
-}
+    }
 
         function adjustToCycle(value) {
             while (value < 1) value += 360;
