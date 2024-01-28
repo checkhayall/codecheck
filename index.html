@@ -126,22 +126,20 @@
         case 12: value = [121 + day - 1]; break;
         default: value = [0];
     }
-
+    
     value = value.map(adjustToCycle);
-
-    var displayValues = value.map(function(v) {
+    
+    var clickableValues = value.map(function(v) {
         return '<span class="clickable" onclick="setNumberAndCalculate(' + v + ')">' + v + '</span>';
     });
-
-    // 2つの値がある場合は 'X / Y' 形式で、1つのみの場合は単一の値を表示
-    return displayValues.length > 1 ? displayValues.join(' / ') : displayValues[0];
+    
+    return clickableValues.length > 1 ? clickableValues.join(' / ') : clickableValues[0];
 }
 
-function adjustToCycle(value) {
-    while (value < 1) value += 360;
-    while (value > 360) value -= 360;
-    return value;
-}
+        function adjustToCycle(value) {
+            while (value < 1) value += 360;
+            while (value > 360) value -= 360;
+            return value;
         }
 
         function calculateCodes() {
