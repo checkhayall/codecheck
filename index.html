@@ -126,20 +126,20 @@
         case 12: value = [121 + day - 1]; break;
         default: value = [0];
     }
-    
-    values = values.map(adjustToCycle);
 
-    var clickableValues = values.map(function(v) {
-        return '<span class="clickable" onclick="setNumberAndCalculate(' + v + ')">' + v + '</span>';
-    });
+    // 調整して、循環コードに合うようにする
+    value = value.map(adjustToCycle);
 
-    return clickableValues.length > 1 ? clickableValues.join(' / ') : clickableValues[0];
+    // 結果を 'X / Y' 形式で表示する
+    var displayValue = value.length === 2 ? value.join(' / ') : value.toString();
+    return displayValue;
 }
 
-        function adjustToCycle(value) {
-            while (value < 1) value += 360;
-            while (value > 360) value -= 360;
-            return value;
+function adjustToCycle(value) {
+    while (value < 1) value += 360;
+    while (value > 360) value -= 360;
+    return value;
+}
         }
 
         function calculateCodes() {
