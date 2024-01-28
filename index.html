@@ -127,12 +127,14 @@
         default: value = [0];
     }
 
-    // 調整して、循環コードに合うようにする
     value = value.map(adjustToCycle);
 
-    // 結果を 'X / Y' 形式で表示する
-    var displayValue = value.length === 2 ? value.join(' / ') : value.toString();
-    return displayValue;
+    var displayValues = value.map(function(v) {
+        return '<span class="clickable" onclick="setNumberAndCalculate(' + v + ')">' + v + '</span>';
+    });
+
+    // 2つの値がある場合は 'X / Y' 形式で、1つのみの場合は単一の値を表示
+    return displayValues.length > 1 ? displayValues.join(' / ') : displayValues[0];
 }
 
 function adjustToCycle(value) {
